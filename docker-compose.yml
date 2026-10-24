@@ -173,7 +173,18 @@ services:
       - blackbox
     security_opt:
       - no-new-privileges:true
-
+  loki-init:
+    image: busybox:1.37
+    user: "0:0"
+    restart: "no"
+    command:
+      - sh
+      - -c
+      - |
+        mkdir -p /loki/chunks /loki/rules
+        chown -R 10001:10001 /loki
+    volumes:
+      - loki_data:/loki
   loki:
     image: grafana/loki:3.6.0
     restart: unless-stopped
@@ -183,6 +194,9 @@ services:
       - loki_data:/loki
     networks:
       - monitoring_net
+    depends_on:
+      loki-init:
+        condition: service_completed_successfully
     security_opt:
       - no-new-privileges:true
 
