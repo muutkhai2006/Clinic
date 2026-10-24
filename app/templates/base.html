@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}ClinicCare{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">ClinicCare</div>
+    <nav>
+      <a href="{{ url_for('index') }}">Tổng quan</a>
+      <a href="{{ url_for('patients') }}">Bệnh nhân</a>
+      <a href="{{ url_for('doctors') }}">Bác sĩ</a>
+      <a href="{{ url_for('appointments') }}">Lịch khám</a>
+    </nav>
+  </header>
+  <main class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}
+        <div class="alert {{ category }}">{{ message }}</div>
+      {% endfor %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </main>
+  <footer>Hệ thống Quản lý Phòng khám / Bệnh viện - Bài thực hành Triển khai và Quản trị Hệ thống Phần mềm</footer>
+</body>
+</html>

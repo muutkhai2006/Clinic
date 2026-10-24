@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}Bệnh nhân - ClinicCare{% endblock %}
+{% block content %}
+<h1>Quản lý bệnh nhân</h1>
+<div class="grid-2">
+  <section class="panel">
+    <h2>{{ 'Cập nhật' if editing else 'Thêm' }} bệnh nhân</h2>
+    <form method="post">
+      <input type="hidden" name="id" value="{{ editing.id if editing else '' }}">
+      <label>Mã bệnh nhân<input required name="patient_code" value="{{ editing.patient_code if editing else '' }}" placeholder="BN004"></label>
+      <label>Họ tên<input required name="full_name" value="{{ editing.full_name if editing else '' }}"></label>
+      <label>Ngày sinh<input type="date" name="date_of_birth" value="{{ editing.date_of_birth if editing and editing.date_of_birth else '' }}"></label>
+      <label>Giới tính<select name="gender"><option value="">-- Chọn --</option>{% for g in ['Nam','Nữ','Khác'] %}<option {% if editing and editing.gender==g %}selected{% endif %}>{{ g }}</option>{% endfor %}</select></label>
+      <label>Số điện thoại<input name="phone" value="{{ editing.phone if editing else '' }}"></label>
+      <label>Địa chỉ<textarea name="address">{{ editing.address if editing else '' }}</textarea></label>
+      <button type="submit">Lưu bệnh nhân</button>{% if editing %}<a class="button secondary" href="{{ url_for('patients') }}">Hủy sửa</a>{% endif %}
+    </form>
+  </section>
+  <section class="panel wide-scroll">
+    <h2>Danh sách bệnh nhân</h2>
+    <table><thead><tr><th>Mã</th><th>Họ tên</th><th>Ngày sinh</th><th>Điện thoại</th><th>Thao tác</th></tr></thead><tbody>
+    {% for p in patients %}<tr><td>{{ p.patient_code }}</td><td>{{ p.full_name }}</td><td>{{ p.date_of_birth or '' }}</td><td>{{ p.phone or '' }}</td><td class="actions"><a href="?edit={{p.id}}">Sửa</a><form method="post" action="{{ url_for('delete_patient', patient_id=p.id) }}" onsubmit="return confirm('Xóa bệnh nhân này?')"><button class="link-danger">Xóa</button></form></td></tr>{% endfor %}
+    </tbody></table>
+  </section>
+</div>
+{% endblock %}

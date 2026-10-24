@@ -1,0 +1,9 @@
+.env
+__pycache__/
+*.pyc
+*.log
+logs/nginx/*
+!logs/nginx/.gitkeep
+.DS_Store
+.vscode/
+.idea/

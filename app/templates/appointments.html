@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}Lịch khám - ClinicCare{% endblock %}
+{% block content %}
+<h1>Quản lý lịch khám</h1>
+<div class="grid-2">
+  <section class="panel">
+    <h2>{{ 'Cập nhật' if editing else 'Đặt' }} lịch khám</h2>
+    <form method="post">
+      <input type="hidden" name="id" value="{{ editing.id if editing else '' }}">
+      <label>Bệnh nhân<select required name="patient_id"><option value="">-- Chọn --</option>{% for p in patients %}<option value="{{p.id}}" {% if editing and editing.patient_id==p.id %}selected{% endif %}>{{p.patient_code}} - {{p.full_name}}</option>{% endfor %}</select></label>
+      <label>Bác sĩ<select required name="doctor_id"><option value="">-- Chọn --</option>{% for d in doctors %}<option value="{{d.id}}" {% if editing and editing.doctor_id==d.id %}selected{% endif %}>{{d.doctor_code}} - {{d.full_name}} ({{d.specialty}})</option>{% endfor %}</select></label>
+      <label>Ngày khám<input required type="date" name="appointment_date" value="{{ editing.appointment_date if editing else '' }}"></label>
+      <label>Giờ khám<input required type="time" name="appointment_time" value="{{ editing.appointment_time.strftime('%H:%M') if editing else '' }}"></label>
+      <label>Lý do khám<textarea name="reason">{{ editing.reason if editing else '' }}</textarea></label>
+      <label>Trạng thái<select name="status">{% for s in ['Đã đặt','Đã xác nhận','Đã khám','Đã hủy'] %}<option {% if editing and editing.status==s %}selected{% endif %}>{{s}}</option>{% endfor %}</select></label>
+      <button type="submit">Lưu lịch khám</button>{% if editing %}<a class="button secondary" href="{{ url_for('appointments') }}">Hủy sửa</a>{% endif %}
+    </form>
+  </section>
+  <section class="panel wide-scroll">
+    <h2>Danh sách lịch khám</h2>
+    <table><thead><tr><th>Ngày</th><th>Giờ</th><th>Bệnh nhân</th><th>Bác sĩ</th><th>Trạng thái</th><th>Thao tác</th></tr></thead><tbody>
+    {% for a in appointments %}<tr><td>{{a.appointment_date}}</td><td>{{a.appointment_time.strftime('%H:%M')}}</td><td>{{a.patient.full_name}}</td><td>{{a.doctor.full_name}}</td><td><span class="badge">{{a.status}}</span></td><td class="actions"><a href="?edit={{a.id}}">Sửa</a><form method="post" action="{{ url_for('delete_appointment', appointment_id=a.id) }}" onsubmit="return confirm('Xóa lịch khám này?')"><button class="link-danger">Xóa</button></form></td></tr>{% endfor %}
+    </tbody></table>
+  </section>
+</div>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}Bác sĩ - ClinicCare{% endblock %}
+{% block content %}
+<h1>Quản lý bác sĩ</h1>
+<div class="grid-2">
+  <section class="panel">
+    <h2>{{ 'Cập nhật' if editing else 'Thêm' }} bác sĩ</h2>
+    <form method="post">
+      <input type="hidden" name="id" value="{{ editing.id if editing else '' }}">
+      <label>Mã bác sĩ<input required name="doctor_code" value="{{ editing.doctor_code if editing else '' }}" placeholder="BS004"></label>
+      <label>Họ tên<input required name="full_name" value="{{ editing.full_name if editing else '' }}"></label>
+      <label>Chuyên khoa<input required name="specialty" value="{{ editing.specialty if editing else '' }}"></label>
+      <label>Số điện thoại<input name="phone" value="{{ editing.phone if editing else '' }}"></label>
+      <label>Phòng khám<input name="room" value="{{ editing.room if editing else '' }}" placeholder="P.101"></label>
+      <button type="submit">Lưu bác sĩ</button>{% if editing %}<a class="button secondary" href="{{ url_for('doctors') }}">Hủy sửa</a>{% endif %}
+    </form>
+  </section>
+  <section class="panel wide-scroll">
+    <h2>Danh sách bác sĩ</h2>
+    <table><thead><tr><th>Mã</th><th>Họ tên</th><th>Chuyên khoa</th><th>Phòng</th><th>Thao tác</th></tr></thead><tbody>
+    {% for d in doctors %}<tr><td>{{ d.doctor_code }}</td><td>{{ d.full_name }}</td><td>{{ d.specialty }}</td><td>{{ d.room or '' }}</td><td class="actions"><a href="?edit={{d.id}}">Sửa</a><form method="post" action="{{ url_for('delete_doctor', doctor_id=d.id) }}" onsubmit="return confirm('Xóa bác sĩ này?')"><button class="link-danger">Xóa</button></form></td></tr>{% endfor %}
+    </tbody></table>
+  </section>
+</div>
+{% endblock %}

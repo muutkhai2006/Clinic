@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}Tổng quan - ClinicCare{% endblock %}
+{% block content %}
+<section class="hero">
+  <div>
+    <span class="eyebrow">HỆ THỐNG QUẢN LÝ PHÒNG KHÁM</span>
+    <h1>Quản lý bệnh nhân, bác sĩ và lịch khám</h1>
+    <p>Ứng dụng minh họa triển khai nhiều container với Flask, PostgreSQL, Nginx, Prometheus, Grafana và Loki.</p>
+  </div>
+</section>
+<div class="cards">
+  <div class="card"><span>Bệnh nhân</span><strong>{{ patient_count }}</strong></div>
+  <div class="card"><span>Bác sĩ</span><strong>{{ doctor_count }}</strong></div>
+  <div class="card"><span>Tổng lịch khám</span><strong>{{ appointment_count }}</strong></div>
+  <div class="card"><span>Lịch hôm nay</span><strong>{{ today_count }}</strong></div>
+</div>
+<section class="panel">
+  <h2>Lịch khám gần đây</h2>
+  <table>
+    <thead><tr><th>Ngày</th><th>Giờ</th><th>Bệnh nhân</th><th>Bác sĩ</th><th>Trạng thái</th></tr></thead>
+    <tbody>
+      {% for a in recent %}
+      <tr><td>{{ a.appointment_date }}</td><td>{{ a.appointment_time.strftime('%H:%M') }}</td><td>{{ a.patient.full_name }}</td><td>{{ a.doctor.full_name }}</td><td><span class="badge">{{ a.status }}</span></td></tr>
+      {% else %}<tr><td colspan="5">Chưa có lịch khám.</td></tr>{% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endblock %}
